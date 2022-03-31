@@ -1,0 +1,36 @@
+package packpack;
+
+import java.net.*;
+import java.io.*;
+
+
+public class Server {
+	
+	public static void main(String[] args) throws IOException{
+		int gameIDs = 0;	
+
+		ServerSocket ss = new ServerSocket(4999);
+		System.out.println("server started");
+		
+		while(true) {
+			Socket s = ss.accept();		
+			System.out.println("client " + s + " connected");
+	
+			Game newGame = new Game();
+			newGame.setGameID(gameIDs);
+			gameIDs++;
+			
+			System.out.println("gameID : " + newGame.getGameID());
+			
+			InputStreamReader in =new InputStreamReader(s.getInputStream());
+			BufferedReader bf = new BufferedReader(in);
+			
+			String str = bf.readLine();
+			System.out.println("client : " + str);
+			
+			PrintWriter pr = new PrintWriter(s.getOutputStream());
+			pr.println("yes");
+			pr.flush();
+		}
+	}	
+}
