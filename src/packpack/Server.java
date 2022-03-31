@@ -21,16 +21,22 @@ public class Server {
 			gameIDs++;
 			
 			System.out.println("gameID : " + newGame.getGameID());
-			
-			InputStreamReader in =new InputStreamReader(s.getInputStream());
-			BufferedReader bf = new BufferedReader(in);
-			
-			String str = bf.readLine();
-			System.out.println("client : " + str);
-			
 			PrintWriter pr = new PrintWriter(s.getOutputStream());
-			pr.println("yes");
-			pr.flush();
+
+			while(true) {
+				BufferedReader bf = new BufferedReader(new InputStreamReader(s.getInputStream()));
+				
+				String recvd = bf.readLine();
+				System.out.println("client : " + recvd);
+					if(recvd.equals("exit")) {
+						pr.println("Bye!");
+						pr.flush();
+						break;
+					}
+				
+				pr.println("Allo?");
+				pr.flush();
+				}
 		}
 	}	
 }
