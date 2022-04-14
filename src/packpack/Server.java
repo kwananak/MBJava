@@ -2,41 +2,29 @@ package packpack;
 
 import java.net.*;
 import java.io.*;
-
+import java.util.*;
 
 public class Server {
+	private static ArrayList<ClientHandler> clients = new ArrayList<>();
+	private static ArrayList<Game> games = new ArrayList<>();
 	
-	public static void main(String[] args) throws IOException{
-		int gameIDs = 0;	
-
-		ServerSocket ss = new ServerSocket(4999);
-		System.out.println("server started");
+	public static void main(String[] args) throws IOException {
+		ServerSocket ss = new ServerSocket(7777);
+		int clientID = 0;
+		int gameID = 0;
+		System.out.println("serverStarted");
 		
 		while(true) {
-			Socket s = ss.accept();		
-			System.out.println("client " + s + " connected");
-	
-			Game newGame = new Game();
-			newGame.setGameID(gameIDs);
-			gameIDs++;
-			
-			System.out.println("gameID : " + newGame.getGameID());
-			PrintWriter pr = new PrintWriter(s.getOutputStream());
-
-			while(true) {
-				BufferedReader bf = new BufferedReader(new InputStreamReader(s.getInputStream()));
-				
-				String recvd = bf.readLine();
-				System.out.println("client : " + recvd);
-					if(recvd.equals("exit")) {
-						pr.println("Bye!");
-						pr.flush();
-						break;
-					}
-				
-				pr.println("Allo?");
-				pr.flush();
-				}
+			clients.add(new ClientHandler(ss.accept(), clientID));
+			System.out.println("accepted connection " + clients.get(clients.size()-1));
+			new Thread(clients.get(clients.size()-1)).start();
+			clientID++;
+			if(clients.size() == 1 || games.get(games.size()-1).getFull()) {
+				games.add(new Game(gameID));
+				gameID++;
+				games.get(games.size()-1).start();
+			}
+			games.get(games.size()-1).addPlayer(clients.get(clients.size()-1));
 		}
 	}	
 }

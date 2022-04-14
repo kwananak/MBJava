@@ -2,31 +2,80 @@ package packClient;
 
 import java.net.*;
 import java.io.*;
-import java.util.Scanner;
-
-
+import java.util.*;
 
 public class Client {
+	private static ArrayList<String> inputLog = new ArrayList<>();	
 	
-	public static void main(String[] args) throws IOException{
-		System.out.println("client started");
-		Socket s = new Socket("localhost", 4999);
-		PrintWriter pr = new PrintWriter(s.getOutputStream());
-		System.out.println("connected to server " + s);
-
+	public static void main(String[] args) throws IOException {
+		System.out.println("main started");
+		Socket server = new Socket("localhost", 7777);
+		System.out.println("connected to server");
 		
-		while(true) {
-			BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-			String m = input.readLine();
-			pr.println(m);
-			pr.flush();
-			
-			InputStreamReader in =new InputStreamReader(s.getInputStream());
-			BufferedReader bf = new BufferedReader(in);
-			
-			String str = bf.readLine();
-			System.out.println("server : " + str);
+		Receiver receiver = new Receiver(server);
+		Sender sender = new Sender(server);
+		
+		receiver.start();
+		sender.start();		
+	}
+	
+	public static class Receiver extends Thread{
+		private Socket server;
+		private BufferedReader in;	
+		
+		public Receiver(Socket s) throws IOException {
+			server = s; 
+			in = new BufferedReader(new InputStreamReader(server.getInputStream()));
 		}
+		
+		public void run() {
+			System.out.println("Receiver started");
+			try {
+				while (true) {
+					String serverResponse = in.readLine();
+					inputLog.add(serverResponse);
+					if (serverResponse == null) break;
+					System.out.println("server says: " + inputLog.get(inputLog.size()-1));
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					in.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}		
+	}
+	
+	public static class Sender extends Thread{
+		private Socket server;
+		private PrintWriter out;
+		private BufferedReader keyboard;
+		
+		public Sender(Socket s) throws IOException {
+			server = s;
+			keyboard = new BufferedReader(new InputStreamReader(System.in));;
+			out = new PrintWriter(server.getOutputStream(), true);
+		}
+		
+		public void run() {
+			System.out.println("Sender started");
+			try{
+				while(true) {
+					System.out.println("ready for input->  ");
+					String command = keyboard.readLine();
+					
+					if (command.equals("quit")) break;
+					out.println(command);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+					out.close();
+				}
+		}		
 	}
 }
 
