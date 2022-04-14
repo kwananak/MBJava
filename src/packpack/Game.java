@@ -5,11 +5,13 @@ import java.util.*;
 public class Game extends Thread {
 	private int gameID;
 	private boolean top = true;
-	private int scoreTop, scoreBot, inning, maxInnings, balls, strikes, outs = 0;
+	private int scoreEvens, scoreOdds, inning, maxInnings, balls, strikes, outs = 0;
 	private ArrayList<ClientHandler> evens = new ArrayList<>();	
 	private ArrayList<ClientHandler> odds = new ArrayList<>();
 	private ArrayList<ClientHandler> players = new ArrayList<>();
-	private ArrayList<ArrayList<Integer>> answers = new ArrayList<>();
+	private ArrayList<ArrayList<Integer>> answers = new ArrayList<>();	
+	private Bases bases;
+
 	private boolean full = false;
 	
 	public Game(int IDFromServer) {
@@ -20,6 +22,7 @@ public class Game extends Thread {
 		waitForPlayers();
 		System.out.println("game " + gameID + " started with " + players.size() + " players");
 		makeTeams();
+		bases = new Bases(evens, odds);
 		setMaxInnings();
 		while(inning < maxInnings) {
 			startInning();
@@ -54,7 +57,6 @@ public class Game extends Thread {
 	public void makeTeams() {
 		for(int j = 0; j < players.size(); j++) {
 			if (j%2 == 0) {
-				System.out.println(players.get(j));
 				evens.add(players.get(j));
 				players.get(j).sender("You're in the Evens");
 			} else {
@@ -66,7 +68,13 @@ public class Game extends Thread {
 	
 	public void startInning() {
 			massSend("startInning " + inning + " " + top);
-			//send players to positions
+			if (top) {
+				bases.setFieldHome(odds);
+				massSend("Odds in the field");
+			} else {
+				bases.setFieldHome(evens);
+				massSend("Evens in the field");
+			}
 	}
 	
 	public void setMaxInnings() {
@@ -77,8 +85,19 @@ public class Game extends Thread {
 			numInns += i.get(1);
 		}
 		maxInnings = numInns / answers.size();
-		System.out.println("maxInnings : " + maxInnings);
+		System.out.println("game " + gameID + " maxInnings : " + maxInnings);
 		massSend("maxInnings " + maxInnings);
+	}
+	
+	public String getAnswerFromMount(ClientHandler pitcher) {
+		pitcher.sender("choose a pitch ");
+		while (true) {
+			if(!pitcher.getStoredIn().isBlank()) {
+				String choice= pitcher.getStoredIn();
+				pitcher.clearStoredIn();
+				return choice;
+			}
+		}
 	}
 	
 	public void getAnswersFromHandlers() {
@@ -120,21 +139,25 @@ public class Game extends Thread {
 	
 	private void upScore() {
 		if(top) {
-			scoreTop++;
+			scoreEvens++;
 		} else {
-			scoreBot++;
+			scoreOdds++;
 		}
 	}
 	
 	public String getScore() {
-		return Integer.toString(scoreTop) + " " + Integer.toString(scoreBot);
+		return Integer.toString(scoreEvens) + " " + Integer.toString(scoreOdds);
 	}
 	
 	public void startTurn() {
-		//select pitch
-		//send pitch
-		//receive pitch
-		//if hit or out: break
+		bases.setHitter(top);
+		while (strikes < 3) {
+			getAnswerFromMount(bases.getPitcher());
+			System.out.println("sending pitch to player " + bases.getHitter().getClientID() + " from player " + bases.getPitcher().getClientID());
+			//send pitch
+			//receive pitch
+			//if hit or out: break
+		}
 	}
 	
 	private void endTurn() {

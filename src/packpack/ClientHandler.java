@@ -21,9 +21,7 @@ public class ClientHandler extends Thread{
 
 	public void run() {
 		System.out.println("ClientHandlerstarted");
-		
 		Receiver receiver = new Receiver();
-		
 		receiver.start();			
 	}
 
