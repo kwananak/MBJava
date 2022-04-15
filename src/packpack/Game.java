@@ -3,14 +3,16 @@ package packpack;
 import java.util.*;
 
 public class Game extends Thread {
+	private String swing;
 	private int gameID;
 	private boolean top = true;
-	private int scoreEvens, scoreOdds, inning, maxInnings, balls, strikes, outs = 0;
+	private int scoreEvens, scoreOdds, inning, maxInnings, outs = 0;
 	private ArrayList<ClientHandler> evens = new ArrayList<>();	
 	private ArrayList<ClientHandler> odds = new ArrayList<>();
 	private ArrayList<ClientHandler> players = new ArrayList<>();
 	private ArrayList<ArrayList<Integer>> answers = new ArrayList<>();	
 	private Bases bases;
+	private ArrayList<Integer> pitch = new ArrayList<>();
 
 	private boolean full = false;
 	
@@ -26,10 +28,11 @@ public class Game extends Thread {
 		setMaxInnings();
 		while(inning < maxInnings) {
 			startInning();
-			while(outs < 3) {
+			while(outs < 1) {
 				startTurn();
 				endTurn();
 			}
+			System.out.println("out of endTurn");
 			endInning();
 		}
 		endGame();
@@ -137,11 +140,13 @@ public class Game extends Thread {
 		return Integer.toString(inning) + " " + Boolean.toString(top);
 	}
 	
-	private void upScore() {
-		if(top) {
-			scoreEvens++;
-		} else {
-			scoreOdds++;
+	private void upScore(Integer i) {
+		for (int j = 0; j < i; j++) {
+			if(top) {
+				scoreEvens++;
+			} else {
+				scoreOdds++;
+			}
 		}
 	}
 	
@@ -150,28 +155,107 @@ public class Game extends Thread {
 	}
 	
 	public void startTurn() {
+		System.out.println("starting turn");
 		bases.setHitter(top);
-		while (strikes < 3) {
-			getAnswerFromMount(bases.getPitcher());
-			System.out.println("sending pitch to player " + bases.getHitter().getClientID() + " from player " + bases.getPitcher().getClientID());
-			//send pitch
-			//receive pitch
-			//if hit or out: break
+		int strikes = 0;
+		while (true) {
+			pitch = getPitch(getAnswerFromMount(bases.getPitcher()));
+			System.out.println("sending pitch " + pitch.toString() + " to player " + bases.getHitter().getClientID() + " from player " + bases.getPitcher().getClientID());
+			sendPitch(pitch);
+			System.out.println("hit received : " + answers);
+			swing = swingResult(pitch);
+			System.out.println(swing);
+			if (swing == "hit") {
+				break;
+			} else {
+				strikes++;
+				if (strikes == 1) {
+					outs++;
+					break;
+				}
+			}
+		}
+	}
+	
+	private String swingResult(ArrayList<Integer> pitch) {
+		if (pitch.get(0) * pitch.get(1) == answers.get(0).get(1)) {
+			if (answers.get(0).get(0) == 0) {
+				System.out.println("right answer from catcher");
+				return "strike";
+			} else {
+				System.out.println("right answer from batter");
+				return "hit";
+			}
+		} else {
+			if (answers.get(0).get(0) == 0) {
+				System.out.println("wrong answer from catcher");
+				return "hit";
+			} else {
+				System.out.println("wrong answer from batter");
+				return "strike";
+			}
+		}
+	}
+		
+	
+	private ArrayList<Integer> getPitch(String str) {
+		Random rand = new Random();
+		ArrayList<Integer> intPitch = new ArrayList<>();
+		
+		if (str.equals("0")) {
+			intPitch.add(rand.nextInt(5) + 3);
+			intPitch.add(rand.nextInt(5) + 3);
+			intPitch.add(1);
+		} else {
+			intPitch.add(rand.nextInt(5) + 8);
+			intPitch.add(rand.nextInt(5) + 8);
+			intPitch.add(2);
+		}
+		
+		return intPitch; 
+	}
+	
+	private void sendPitch(ArrayList<Integer> pitch) {
+		bases.getHome().get(0).sender(pitch.toString());	
+		bases.getHome().get(1).sender(pitch.toString());
+		System.out.println("getAnswers game " + gameID + " started");
+		answers.clear();
+		while (answers.size() < bases.getHome().size()) {
+			for (int i = 0 ; i < 2 ; i++) {
+				if(!bases.getHome().get(i).getStoredIn().isBlank()) {
+					ArrayList<Integer> answer = new ArrayList<>();
+					answer.add(i);
+					answer.add(Integer.valueOf(bases.getHome().get(i).getStoredIn()));
+					answers.add(answer);
+					bases.getHome().get(i).clearStoredIn();
+					System.out.println("got " + answers.get(answers.size()-1).get(1) + " from player " + bases.getHome().get(i).getClientID());
+				}
+			}
 		}
 	}
 	
 	private void endTurn() {
-		//cycle runners & batter
-		//if 3 outs : break
+		System.out.println("endTurn started");
+		if (outs < 3){
+			if (swing.equals("hit")) {
+				upScore(bases.cycleBases(pitch.get(2)));
+			} else {
+				bases.clearBatter();
+			}
+		}
+		System.out.println("outs " + outs + " ,score " + scoreEvens + " - " + scoreOdds);
 	}
 	
 	private void endInning() {
-		//return players to bench
+		System.out.println("starting endInning");
+		outs = 0;
+		bases.clearBases();
 		upInning();
 	}
 	
 	private void endGame() {
-		//return score
+		System.out.println("final score " + scoreEvens + " - " + scoreOdds);
+		massSend("final score " + scoreEvens + " - " + scoreOdds);
 		//save stats
 		//close game
 	}

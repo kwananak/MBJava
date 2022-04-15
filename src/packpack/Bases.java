@@ -20,21 +20,31 @@ public class Bases {
 	public void setFieldHome(ArrayList<ClientHandler> p) {
 		switch (p.size()) {
 			case 1:
+				mount.add(p.get(0));
 				home.add(p.get(0));
+				first.add(p.get(0));
+				second.add(p.get(0));
+				third.add(p.get(0));
 				break;
 			case 2: 
 				mount.add(p.get(0));
 				home.add(p.get(1));
+				first.add(p.get(0));
+				second.add(p.get(1));
+				third.add(p.get(0));
 				break;
 			case 3: 
 				mount.add(p.get(0));
 				home.add(p.get(1));
 				first.add(p.get(2));
+				second.add(p.get(2));
+				third.add(p.get(2));
 				break;
 			case 4: 
-				mount.add(p.get(0));		
+				mount.add(p.get(0));
 				home.add(p.get(1));
 				first.add(p.get(2));
+				second.add(p.get(3));
 				third.add(p.get(3));
 				break;
 			case 5: 
@@ -48,17 +58,10 @@ public class Bases {
 	}
 	
 	public ClientHandler getPitcher() {
-		if (mount.isEmpty()) {
-			return home.get(0);
-		} else {
-			return mount.get(0);
-		}
+		return mount.get(0);
 	}
 	
 	public void setHitter(boolean top) {
-		if (home.size() == 2) {
-			home.remove(1);
-		}
 		if (top) {
 			home.add(batOrderEvens.get(0));
 			ArrayList<ClientHandler> newOrder = new ArrayList<>();
@@ -78,5 +81,44 @@ public class Bases {
 	
 	public ClientHandler getHitter() {
 		return home.get(1);
-	}	
+	}
+	
+	public ArrayList<ClientHandler> getHome(){
+		return home;
+	}
+	
+	public Integer cycleBases(Integer hit) {
+		int score = 0; 
+		for (int i = 0; i < hit; i++) {
+			if (third.size() == 2) {
+				score++;
+				third.remove(1);
+			}
+			if (second.size() == 2) {
+				third.add(second.get(1));
+				second.remove(1);
+			}
+			if (first.size() == 2) {
+				second.add(first.get(1));
+				first.remove(1);
+			}
+			if (home.size() == 2) {
+				first.add(home.get(1));
+				clearBatter();
+			}
+		}
+		return score;
+	}
+	
+	public void clearBatter() {
+		home.remove(1);
+		}
+	
+	public void clearBases() {
+		home.clear();
+		first.clear();
+		second.clear();
+		third.clear();
+		mount.clear();
+	}
 }
