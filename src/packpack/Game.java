@@ -32,19 +32,18 @@ public class Game extends Thread {
 				startTurn();
 				endTurn();
 			}
-			System.out.println("out of endTurn");
 			endInning();
 		}
 		endGame();
 	}
 	
 	public void waitForPlayers() {
-		System.out.println("waiting on players");
+		System.out.println("waiting on players for 3 secs");
 		int i = 0;
 		
 		while (true) {
 			i++;		
-			if (players.size() > 11 || (players.size() > 1 && i > 3000)) {
+			if (players.size() > 9 || (players.size() > 1 && i > 3000)) {
 				break;
 			} else {
 				try {
@@ -82,7 +81,7 @@ public class Game extends Thread {
 	
 	public void setMaxInnings() {
 		Integer numInns = 0;
-		massSend("How many Innings?");
+		massSend("command:sender:How many Innings?");
 		getAnswersFromHandlers();
 		for(ArrayList<Integer> i : answers) {
 			numInns += i.get(1);
@@ -93,7 +92,7 @@ public class Game extends Thread {
 	}
 	
 	public String getAnswerFromMount(ClientHandler pitcher) {
-		pitcher.sender("choose a pitch ");
+		pitcher.sender("command:sender:choose a pitch");
 		while (true) {
 			if(!pitcher.getStoredIn().isBlank()) {
 				String choice= pitcher.getStoredIn();
@@ -162,7 +161,7 @@ public class Game extends Thread {
 			pitch = getPitch(getAnswerFromMount(bases.getPitcher()));
 			System.out.println("sending pitch " + pitch.toString() + " to player " + bases.getHitter().getClientID() + " from player " + bases.getPitcher().getClientID());
 			sendPitch(pitch);
-			System.out.println("hit received : " + answers);
+			System.out.println("swing received : " + answers);
 			swing = swingResult(pitch);
 			System.out.println(swing);
 			if (swing == "hit") {
@@ -216,8 +215,8 @@ public class Game extends Thread {
 	}
 	
 	private void sendPitch(ArrayList<Integer> pitch) {
-		bases.getHome().get(0).sender(pitch.toString());	
-		bases.getHome().get(1).sender(pitch.toString());
+		bases.getHome().get(0).sender("command:sender:" + pitch.get(0) + " * " + pitch.get(1));	
+		bases.getHome().get(1).sender("command:sender:" + pitch.get(0) + " * " + pitch.get(1));
 		System.out.println("getAnswers game " + gameID + " started");
 		answers.clear();
 		while (answers.size() < bases.getHome().size()) {
@@ -235,7 +234,6 @@ public class Game extends Thread {
 	}
 	
 	private void endTurn() {
-		System.out.println("endTurn started");
 		if (outs < 3){
 			if (swing.equals("hit")) {
 				upScore(bases.cycleBases(pitch.get(2)));
@@ -247,7 +245,6 @@ public class Game extends Thread {
 	}
 	
 	private void endInning() {
-		System.out.println("starting endInning");
 		outs = 0;
 		bases.clearBases();
 		upInning();
