@@ -6,15 +6,26 @@ import java.util.*;
 
 public class Client {
 	private static ArrayList<String> inputLog = new ArrayList<>();	
+	static Window window = new Window();
+	static Panel panel = new Panel();
+	
 	
 	public static void main(String[] args) throws IOException {
 		Socket server = new Socket("localhost", 7777);
 		System.out.println("connected to server");
 		Receiver receiver = new Receiver(server);
-		receiver.start();		
+		
+		window.add(panel);
+		window.pack();
+		window.setLocationRelativeTo(null);
+		window.setVisible(true);
+
+		receiver.start();
+		panel.startUIThread();	
+
 	}
 	
-	public static class Receiver extends Thread{
+	private static class Receiver extends Thread{
 		private Socket server;
 		private BufferedReader in;	
 		
@@ -22,7 +33,7 @@ public class Client {
 			server = s; 
 			in = new BufferedReader(new InputStreamReader(server.getInputStream()));
 		}
-		
+
 		public void run() {
 			System.out.println("Receiver started");
 			try {
@@ -30,6 +41,11 @@ public class Client {
 					String serverResponse = in.readLine();
 					inputLog.add(serverResponse);
 					if (serverResponse.startsWith("command")) {
+						panel.teams[0].players.get(0).setDestination(panel.bases.homeCoords);
+						panel.teams[1].players.get(0).setDestination(panel.bases.firstCoords);						panel.teams[1].players.get(0).setDestination(panel.bases.firstCoords);
+						panel.teams[0].players.get(3).setDestination(panel.bases.secondCoords);
+						panel.teams[1].players.get(3).setDestination(panel.bases.thirdCoords);
+						panel.teams[1].players.get(4).setDestination(panel.bases.mountCoords);
 						String[] arrResp = serverResponse.split(":");
 						switch (arrResp[1]) {
 							case "sender": sender(server, arrResp[2]); 
@@ -60,7 +76,6 @@ public class Client {
 			command = keyboard.readLine();
 			PrintWriter out = new PrintWriter(sendSock.getOutputStream(), true);
 			out.println(command);
-			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}			
