@@ -71,34 +71,68 @@ public class Panel extends JPanel implements Runnable{
 	
 	public void inningStart(String str) {	
 		batter = 0;
+		
 		if (str.equals("top")) {
 			teamField = teams[1];
 			teamBat = teams[0];
-		} else if (str.equals("bot")) {
+		} else {
 			teamField = teams[0];
 			teamBat = teams[1];
 		}
-		
-		if (teamField != null) {
-			teamField.players.get(0).setDestination(bases.mountCoords);
-			teamField.players.get(1).setDestination(bases.homeCoordsField);
-			teamField.players.get(2).setDestination(bases.firstCoordsField);
-			teamField.players.get(3).setDestination(bases.secondCoordsField);
-			teamField.players.get(4).setDestination(bases.thirdCoordsField);
+	
+		teamField.players.get(0).setDestination(bases.mountCoords);
+		teamField.players.get(1).setDestination(bases.homeCoordsField);
+		teamField.players.get(2).setDestination(bases.firstCoordsField);
+		teamField.players.get(3).setDestination(bases.secondCoordsField);
+		teamField.players.get(4).setDestination(bases.thirdCoordsField);
+	}
+	
+	public void turnStart() {	
+		teamBat.players.get(batter).setDestination(bases.homeCoordsBat);
+		teamBat.players.get(batter).setBase(1);
+		batter++;
+		if (batter == 5) {
+			batter = 0;
+		}
+	}
+
+	public void cycleBases(String str) {
+		int a = Integer.valueOf(str);
+		for (int i = 0; i < a; i++) {
+			for (PlayerClient player: teamBat.players) {
+				if (player.getBase() > 0) {
+					player.setBase(player.getBase()+1);
+					switch (player.getBase()) {
+						case 5:
+							player.setDestination(player.benchSpot);
+							player.setBase(0);
+							break;
+						case 4:
+							player.setDestination(bases.thirdCoordsBat);
+							break;
+						case 3:
+							player.setDestination(bases.secondCoordsBat);
+							break;
+						case 2:
+							player.setDestination(bases.firstCoordsBat);
+							break;
+					}
+				}
+			}
 		}
 	}
 	
-	public void turnStart(String str) {
-		
-		if (str.equals("start")) {
-			if(teamBat != null) {
-				System.out.println("batter time");
-				teamBat.players.get(batter).setDestination(bases.homeCoordsBat);
-				batter++;
-				if (batter == 5) {
-					batter = 0;
-				}
+	public void clearBatter() {
+		for (PlayerClient player: teamBat.players) {
+			if (player.getBase() == 1) {
+				player.setDestination(player.benchSpot);
 			}
+		}
+	}
+	
+	public void returnBench() {
+		for (TeamClient team: teams) {
+			team.returnBench();
 		}
 	}
 }

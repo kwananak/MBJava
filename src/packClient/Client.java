@@ -22,7 +22,6 @@ public class Client {
 
 		receiver.start();
 		panel.startUIThread();	
-
 	}
 	
 	private static class Receiver extends Thread{
@@ -42,11 +41,25 @@ public class Client {
 					inputLog.add(serverResponse);
 					if (serverResponse.startsWith("command")) {
 						String[] arrResp = serverResponse.split(":");
-						System.out.println("arrResp[1]" + arrResp[1]);
 						switch (arrResp[1]) {
-							case "sender": sender(server, arrResp[2]);
-							case "inning": panel.inningStart(arrResp[2]);
-							case "turn":panel.turnStart(arrResp[2]);
+							case "sender": 
+								sender(server, arrResp[2]); 
+								break;
+							case "inningStart": 
+								panel.inningStart(arrResp[2]); 
+								break;
+							case "turnStart": 
+								panel.turnStart(); 
+								break;
+							case "cycleBases":
+								panel.cycleBases(arrResp[2]);
+								break;
+							case "clearBatter":
+								panel.clearBatter();
+								break;
+							case "returnBench":
+								panel.returnBench();
+								break;
 						}
 					} else {
 						System.out.println("server says: " + inputLog.get(inputLog.size()-1));

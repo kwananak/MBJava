@@ -11,7 +11,8 @@ public class PlayerClient {
 	Panel panel;	
 	Image sprite;
 	int[] destination = {0,0};
-	boolean field, home, base, bench, running = false;
+	boolean field, home, onBase, bench, running = false;
+	int base = 0;
 	
 	
 	public PlayerClient(Panel panel, String str, int x, int y) {
@@ -49,5 +50,17 @@ public class PlayerClient {
 	
 	public void setDestination(int[] coords) {
 		destination = coords;
+	}
+	
+	public void setBase(int i) {
+		base = i;
+	}
+	
+	public int getBase() {
+		return base;
+	}
+	
+	public void returnBench() {
+		destination = benchSpot;
 	}
 }

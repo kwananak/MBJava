@@ -32,6 +32,9 @@ public class TeamClient {
 		}
 	}
 	
-	
-
+	public void returnBench() {
+		for (PlayerClient player: players) {
+			player.returnBench();
+		}	
+	}
 }

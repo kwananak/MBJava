@@ -72,10 +72,10 @@ public class Game extends Thread {
 			massSend("startInning " + inning + " " + top);
 			if (top) {
 				bases.setFieldHome(odds);
-				massSend("command:inning:top");
+				massSend("command:inningStart:top");
 			} else {
 				bases.setFieldHome(evens);
-				massSend("command:inning:bot");
+				massSend("command:inningStart:bot");
 			}
 	}
 	
@@ -156,7 +156,7 @@ public class Game extends Thread {
 	public void startTurn() {
 		System.out.println("starting turn");
 		bases.setHitter(top);
-		massSend("command:turn:start");
+		massSend("command:turnStart");
 		int strikes = 0;
 		while (true) {
 			pitch = getPitch(getAnswerFromMount(bases.getPitcher()));
@@ -238,8 +238,10 @@ public class Game extends Thread {
 		if (outs < 3){
 			if (swing.equals("hit")) {
 				upScore(bases.cycleBases(pitch.get(2)));
+				massSend("command:cycleBases:" + pitch.get(2));
 			} else {
 				bases.clearBatter();
+				massSend("command:clearBatter");
 			}
 		}
 		System.out.println("outs " + outs + " ,score " + scoreEvens + " - " + scoreOdds);
@@ -248,6 +250,7 @@ public class Game extends Thread {
 	private void endInning() {
 		outs = 0;
 		bases.clearBases();
+		massSend("command:returnBench");
 		upInning();
 	}
 	
