@@ -13,6 +13,7 @@ public class Panel extends JPanel implements Runnable{
 	TeamClient teamField = null;
 	TeamClient teamBat = null;
 	int batter = 0;
+	Jumbotron jumbotron = new Jumbotron(this);
 	
 	final int PANEL_WIDTH = 1000;
 	final int PANEL_HEIGHT = 800;
@@ -37,8 +38,7 @@ public class Panel extends JPanel implements Runnable{
 		long lastTime = System.nanoTime();
 		long currentTime;
 		
-		while(gameThread != null) {
-			
+		while(gameThread != null) {			
 			currentTime = System.nanoTime();			
 			delta += (currentTime - lastTime) / drawInterval;			
 			lastTime = currentTime;
@@ -67,6 +67,8 @@ public class Panel extends JPanel implements Runnable{
 		umpire.draw(g2D);
 		teams[0].drawTeam(g2D);
 		teams[1].drawTeam(g2D);
+		
+		jumbotron.draw(g2D);
 	}
 	
 	public void inningStart(String str) {	

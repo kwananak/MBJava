@@ -6,7 +6,7 @@ public class Game extends Thread {
 	private String swing;
 	private int gameID;
 	private boolean top = true;
-	private int scoreEvens, scoreOdds, inning, maxInnings, outs = 0;
+	private int strikes, balls, scoreEvens, scoreOdds, inning, maxInnings, outs = 0;
 	private ArrayList<ClientHandler> evens = new ArrayList<>();	
 	private ArrayList<ClientHandler> odds = new ArrayList<>();
 	private ArrayList<ClientHandler> players = new ArrayList<>();
@@ -28,7 +28,7 @@ public class Game extends Thread {
 		setMaxInnings();
 		while(inning < maxInnings) {
 			startInning();
-			while(outs < 1) {
+			while(outs < 2) {
 				startTurn();
 				endTurn();
 			}
@@ -69,7 +69,13 @@ public class Game extends Thread {
 	}
 	
 	public void startInning() {
-			massSend("startInning " + inning + " " + top);
+			String topStr;
+			if(top) {
+				topStr = "true";
+			} else {
+				topStr = "false";
+			}
+			massSend("command:jumbotron:" + strikes + "," + balls + "," + outs  + "," + inning + "," + scoreEvens + " - " + scoreOdds + "," + topStr + ",false");
 			if (top) {
 				bases.setFieldHome(odds);
 				massSend("command:inningStart:top");
@@ -80,7 +86,8 @@ public class Game extends Thread {
 	}
 	
 	public void setMaxInnings() {
-		Integer numInns = 0;
+		Integer numInns = 0;		
+		massSend("command:umpire:How many Innings?");
 		massSend("command:sender:How many Innings?");
 		getAnswersFromHandlers();
 		for(ArrayList<Integer> i : answers) {
@@ -88,15 +95,16 @@ public class Game extends Thread {
 		}
 		maxInnings = numInns / answers.size();
 		System.out.println("game " + gameID + " maxInnings : " + maxInnings);
-		massSend("maxInnings " + maxInnings);
+		massSend("command:umpire: ");
 	}
 	
-	public String getAnswerFromMount(ClientHandler pitcher) {
-		pitcher.sender("command:sender:choose a pitch");
+	public String getAnswerFromMount(ClientHandler pitcher) {		
+		pitcher.sender("command:pitch:choose a pitch");
 		while (true) {
 			if(!pitcher.getStoredIn().isBlank()) {
 				String choice= pitcher.getStoredIn();
 				pitcher.clearStoredIn();
+				pitcher.sender("command:umpire: ");
 				return choice;
 			}
 		}
@@ -154,12 +162,19 @@ public class Game extends Thread {
 	}
 	
 	public void startTurn() {
+		String topStr;
+		if(top) {
+			topStr = "true";
+		} else {
+			topStr = "false";
+		}
+		massSend("command:turnStart:" + strikes + "," + balls + "," + outs  + "," + inning + "," + scoreEvens + " - " + scoreOdds + "," + topStr + ",false");
 		System.out.println("starting turn");
 		bases.setHitter(top);
-		massSend("command:turnStart");
-		int strikes = 0;
 		while (true) {
+			massSend("command:jumbotron:" + strikes + "," + balls + "," + outs  + "," + inning + "," + scoreEvens + " - " + scoreOdds + "," + topStr + ",false");			
 			pitch = getPitch(getAnswerFromMount(bases.getPitcher()));
+			massSend("command:umpire:" + pitch.get(0) + " * " + pitch.get(1));
 			System.out.println("sending pitch " + pitch.toString() + " to player " + bases.getHitter().getClientID() + " from player " + bases.getPitcher().getClientID());
 			sendPitch(pitch);
 			System.out.println("swing received : " + answers);
@@ -169,7 +184,7 @@ public class Game extends Thread {
 				break;
 			} else {
 				strikes++;
-				if (strikes == 1) {
+				if (strikes == 2) {
 					outs++;
 					break;
 				}
@@ -180,18 +195,18 @@ public class Game extends Thread {
 	private String swingResult(ArrayList<Integer> pitch) {
 		if (pitch.get(0) * pitch.get(1) == answers.get(0).get(1)) {
 			if (answers.get(0).get(0) == 0) {
-				System.out.println("right answer from catcher");
+				massSend("command:umpire:right answer from catcher");
 				return "strike";
 			} else {
-				System.out.println("right answer from batter");
+				massSend("command:umpire:right answer from batter");
 				return "hit";
 			}
 		} else {
 			if (answers.get(0).get(0) == 0) {
-				System.out.println("wrong answer from catcher");
+				massSend("command:umpire:wrong answer from catcher");
 				return "hit";
 			} else {
-				System.out.println("wrong answer from batter");
+				massSend("command:umpire:wrong answer from batter");
 				return "strike";
 			}
 		}
@@ -219,6 +234,7 @@ public class Game extends Thread {
 		bases.getHome().get(0).sender("command:sender:" + pitch.get(0) + " * " + pitch.get(1));	
 		bases.getHome().get(1).sender("command:sender:" + pitch.get(0) + " * " + pitch.get(1));
 		System.out.println("getAnswers game " + gameID + " started");
+		
 		answers.clear();
 		while (answers.size() < bases.getHome().size()) {
 			for (int i = 0 ; i < 2 ; i++) {
@@ -235,7 +251,8 @@ public class Game extends Thread {
 	}
 	
 	private void endTurn() {
-		if (outs < 3){
+		strikes = 0;
+		if (outs < 2){
 			if (swing.equals("hit")) {
 				upScore(bases.cycleBases(pitch.get(2)));
 				massSend("command:cycleBases:" + pitch.get(2));

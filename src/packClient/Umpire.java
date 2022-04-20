@@ -1,5 +1,7 @@
 package packClient;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
 
@@ -12,6 +14,7 @@ public class Umpire {
 	Panel panel;	
 	Image sprite;
 	int[] destination = {0,0};
+	String talk = " ";
 	
 	public Umpire(Panel panel, String str, int x, int y) {
 		this.panel = panel;
@@ -25,6 +28,13 @@ public class Umpire {
 	}
 	
 	public void draw(Graphics2D g2D) {
-		g2D.drawImage(sprite, this.coords[0], this.coords[1], null);
+		g2D.drawImage(sprite, coords[0], coords[1], null);
+		g2D.setPaint(Color.white);
+		g2D.setFont(new Font("Fixedsys",Font.BOLD,30));
+		g2D.drawString(talk, coords[0] - 120, coords[1] - 15);
+	}
+	
+	public void setTalk(String str) {
+		talk = str;
 	}
 }

@@ -9,7 +9,6 @@ public class Client {
 	static Window window = new Window();
 	static Panel panel = new Panel();
 	
-	
 	public static void main(String[] args) throws IOException {
 		Socket server = new Socket("localhost", 7777);
 		System.out.println("connected to server");
@@ -49,16 +48,28 @@ public class Client {
 								panel.inningStart(arrResp[2]); 
 								break;
 							case "turnStart": 
-								panel.turnStart(); 
+								panel.turnStart();
+								panel.jumbotron.updateJumbotron(arrResp[2]);
 								break;
 							case "cycleBases":
 								panel.cycleBases(arrResp[2]);
 								break;
 							case "clearBatter":
 								panel.clearBatter();
+								panel.umpire.setTalk("Out!");
 								break;
 							case "returnBench":
 								panel.returnBench();
+								break;
+							case "jumbotron":
+								panel.jumbotron.updateJumbotron(arrResp[2]);
+								break;
+							case "umpire":
+								panel.umpire.setTalk(arrResp[2]);
+								break;
+							case "pitch":
+								panel.umpire.setTalk(arrResp[2]);
+								sender(server, arrResp[2]);
 								break;
 						}
 					} else {
