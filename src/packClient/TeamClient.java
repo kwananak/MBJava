@@ -31,6 +31,7 @@ public class TeamClient {
 			player.draw(g2D);
 		}
 	}
-
+	
+	
 
 }

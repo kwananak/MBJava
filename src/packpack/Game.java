@@ -72,10 +72,10 @@ public class Game extends Thread {
 			massSend("startInning " + inning + " " + top);
 			if (top) {
 				bases.setFieldHome(odds);
-				massSend("Odds in the field");
+				massSend("command:inning:top");
 			} else {
 				bases.setFieldHome(evens);
-				massSend("Evens in the field");
+				massSend("command:inning:bot");
 			}
 	}
 	
@@ -156,6 +156,7 @@ public class Game extends Thread {
 	public void startTurn() {
 		System.out.println("starting turn");
 		bases.setHitter(top);
+		massSend("command:turn:start");
 		int strikes = 0;
 		while (true) {
 			pitch = getPitch(getAnswerFromMount(bases.getPitcher()));

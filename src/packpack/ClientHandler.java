@@ -33,7 +33,7 @@ public class ClientHandler extends Thread{
 				while (true) {
 					storedIn = in.readLine();
 					inputs.add(storedIn);
-					System.out.println("client " + clientID + " says: " + storedIn);
+					//System.out.println("client " + clientID + " says: " + storedIn);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

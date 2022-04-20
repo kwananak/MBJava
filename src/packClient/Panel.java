@@ -8,8 +8,11 @@ import javax.swing.*;
 public class Panel extends JPanel implements Runnable{
 	Image background = new ImageIcon("back.png").getImage();
 	TeamClient[] teams = {new TeamClient(this, "redSprite.png", 10, 150), new TeamClient(this, "blueSprite.png", 630, 150)};
-	Bases bases = new Bases(teams);
-	Umpire umpire = new Umpire(this, "umpiSprite.png", 510, 180);
+	BasesClient bases = new BasesClient(teams);
+	Umpire umpire = new Umpire(this, "umpiSprite.png", 530, 180);
+	TeamClient teamField = null;
+	TeamClient teamBat = null;
+	int batter = 0;
 	
 	final int PANEL_WIDTH = 1000;
 	final int PANEL_HEIGHT = 800;
@@ -64,5 +67,38 @@ public class Panel extends JPanel implements Runnable{
 		umpire.draw(g2D);
 		teams[0].drawTeam(g2D);
 		teams[1].drawTeam(g2D);
+	}
+	
+	public void inningStart(String str) {	
+		batter = 0;
+		if (str.equals("top")) {
+			teamField = teams[1];
+			teamBat = teams[0];
+		} else if (str.equals("bot")) {
+			teamField = teams[0];
+			teamBat = teams[1];
+		}
+		
+		if (teamField != null) {
+			teamField.players.get(0).setDestination(bases.mountCoords);
+			teamField.players.get(1).setDestination(bases.homeCoordsField);
+			teamField.players.get(2).setDestination(bases.firstCoordsField);
+			teamField.players.get(3).setDestination(bases.secondCoordsField);
+			teamField.players.get(4).setDestination(bases.thirdCoordsField);
+		}
+	}
+	
+	public void turnStart(String str) {
+		
+		if (str.equals("start")) {
+			if(teamBat != null) {
+				System.out.println("batter time");
+				teamBat.players.get(batter).setDestination(bases.homeCoordsBat);
+				batter++;
+				if (batter == 5) {
+					batter = 0;
+				}
+			}
+		}
 	}
 }

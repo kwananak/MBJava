@@ -41,14 +41,12 @@ public class Client {
 					String serverResponse = in.readLine();
 					inputLog.add(serverResponse);
 					if (serverResponse.startsWith("command")) {
-						panel.teams[0].players.get(0).setDestination(panel.bases.homeCoords);
-						panel.teams[1].players.get(0).setDestination(panel.bases.firstCoords);						panel.teams[1].players.get(0).setDestination(panel.bases.firstCoords);
-						panel.teams[0].players.get(3).setDestination(panel.bases.secondCoords);
-						panel.teams[1].players.get(3).setDestination(panel.bases.thirdCoords);
-						panel.teams[1].players.get(4).setDestination(panel.bases.mountCoords);
 						String[] arrResp = serverResponse.split(":");
+						System.out.println("arrResp[1]" + arrResp[1]);
 						switch (arrResp[1]) {
-							case "sender": sender(server, arrResp[2]); 
+							case "sender": sender(server, arrResp[2]);
+							case "inning": panel.inningStart(arrResp[2]);
+							case "turn":panel.turnStart(arrResp[2]);
 						}
 					} else {
 						System.out.println("server says: " + inputLog.get(inputLog.size()-1));
