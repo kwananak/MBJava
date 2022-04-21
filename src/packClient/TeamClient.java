@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 public class TeamClient {
 	Panel panel;
-	int[] benchCoords = {0,0};
 	String sprite;
 	
 	ArrayList<PlayerClient> players = new ArrayList<>();

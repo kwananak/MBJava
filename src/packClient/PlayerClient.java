@@ -2,15 +2,17 @@ package packClient;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.util.ArrayList;
+
 import javax.swing.ImageIcon;
 
 public class PlayerClient {
 	int Velocity = 3;
-	int[] coords = {0,0};
-	int[] benchSpot = {0,0};
+	ArrayList<Integer> coords = new ArrayList<>();;
+	ArrayList<Integer> benchSpot = new ArrayList<>();;
 	Panel panel;	
 	Image sprite;
-	int[] destination = {0,0};
+	ArrayList<ArrayList<Integer>> destinations = new ArrayList<>();
 	boolean field, home, onBase, bench, running = false;
 	int base = 0;
 	
@@ -18,38 +20,42 @@ public class PlayerClient {
 	public PlayerClient(Panel panel, String str, int x, int y) {
 		this.panel = panel;
 		this.sprite =  new ImageIcon(str).getImage();
-		this.coords[0] = x;
-		this.coords[1] = y;
-		this.benchSpot[0] = x;
-		this.benchSpot[1] = y;
-		this.destination[0] = x;
-		this.destination[1] = y;
+		this.coords.add(x);
+		this.coords.add(y);
+		this.benchSpot.add(x);
+		this.benchSpot.add(y);
+		ArrayList<Integer> dest = new ArrayList<>(); 
+		dest.add(x);
+		dest.add(y);
+		this.destinations.add(dest);
 	}
 	
 	public void move() {
-		if (coords[0] < destination[0] - Velocity + 1) {
-			coords[0] += Velocity;
-		}
-		
-		if (coords[0] > destination[0] + Velocity - 1) {
-			coords[0] -= Velocity;
-		}
-		
-		if (coords[1] < destination[1] - Velocity + 1) {
-			coords[1] += Velocity;
-		}
-		
-		if (coords[1] > destination[1] + Velocity - 1) {
-			coords[1] -= Velocity;
-		}
+		if (destinations.size() > 0) {
+			if (coords.get(0) < destinations.get(0).get(0) - Velocity + 1) {
+				coords.set(0, coords.get(0) + Velocity);
+			}			
+			if (coords.get(0) > destinations.get(0).get(0) + Velocity - 1) {
+				coords.set(0, coords.get(0) - Velocity);
+			}			
+			if (coords.get(1) < destinations.get(0).get(1) - Velocity + 1) {
+				coords.set(1, coords.get(1) + Velocity);
+			}			
+			if (coords.get(1) > destinations.get(0).get(1) + Velocity - 1) {
+				coords.set(1, coords.get(1) - Velocity);
+			}
+			if (coords.equals(destinations.get(0))) {
+				destinations.remove(0);
+			}
+		}		
 	}
 	
 	public void draw(Graphics2D g2D) {
-		g2D.drawImage(sprite, this.coords[0], this.coords[1], null);
+		g2D.drawImage(sprite, coords.get(0), coords.get(1), null);
 	}
 	
-	public void setDestination(int[] coords) {
-		destination = coords;
+	public void setDestination(ArrayList<Integer> coords) {
+		destinations.add(coords);
 	}
 	
 	public void setBase(int i) {
@@ -61,6 +67,6 @@ public class PlayerClient {
 	}
 	
 	public void returnBench() {
-		destination = benchSpot;
+		destinations.add(benchSpot);
 	}
 }

@@ -169,17 +169,14 @@ public class Game extends Thread {
 		} else {
 			topStr = "false";
 		}
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		try {Thread.sleep(100);} catch (InterruptedException e) {e.printStackTrace();}
 		massSend("command:turnStart:" + strikes + "," + balls + "," + outs  + "," + inning + "," + scoreEvens + " - " + scoreOdds + "," + topStr + ",false");
-		System.out.println("starting turn");
 		bases.setHitter(top);
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 		while (true) {
-			massSend("command:jumbotron:" + strikes + "," + balls + "," + outs  + "," + inning + "," + scoreEvens + " - " + scoreOdds + "," + topStr + ",false");			
+			massSend("command:startLoop:" + strikes + "," + balls + "," + outs  + "," + inning + "," + scoreEvens + " - " + scoreOdds + "," + topStr + ",false");			
 			pitch = getPitch(getAnswerFromMount(bases.getPitcher()));
+			try {Thread.sleep(500);} catch (InterruptedException e) {e.printStackTrace();}
 			massSend("command:umpire:" + pitch.get(0) + " * " + pitch.get(1));
 			System.out.println("sending pitch " + pitch.toString() + " to player " + bases.getHitter().getClientID() + " from player " + bases.getPitcher().getClientID());
 			sendPitch(pitch);
@@ -190,6 +187,8 @@ public class Game extends Thread {
 				break;
 			} else {
 				strikes++;
+				massSend("command:umpire:strike " + Integer.toString(strikes));
+				try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}				
 				if (strikes == 2) {
 					outs++;
 					break;
@@ -262,19 +261,11 @@ public class Game extends Thread {
 			if (swing.equals("hit")) {
 				upScore(bases.cycleBases(pitch.get(2)));
 				massSend("command:cycleBases:" + pitch.get(2));
-				try {
-					Thread.sleep(2000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				try {Thread.sleep(1500);} catch (InterruptedException e) {e.printStackTrace();}
 			} else {
 				bases.clearBatter();
 				massSend("command:clearBatter");
-				try {
-					Thread.sleep(2000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				try {Thread.sleep(1500);} catch (InterruptedException e) {e.printStackTrace();}
 			}
 		}
 		System.out.println("outs " + outs + " ,score " + scoreEvens + " - " + scoreOdds);

@@ -13,8 +13,6 @@ public class Jumbotron extends JPanel{
 	String fullJumbo = "true";
 	String score = "0 - 0"; 
 	String mainDisplay = "Mathball";
-	Image top =  new ImageIcon("top.png").getImage();	
-	Image bottom =  new ImageIcon("top.png").getImage();
 	Panel panel;
 	
 	public Jumbotron(Panel p) {
@@ -62,15 +60,15 @@ public class Jumbotron extends JPanel{
 		switch (str) {
 			case "1":
 				mainDisplay = "Single!";
-				fullJumbo = "false";
+				fullJumbo = "true";
 				break;
 			case "2":
 				mainDisplay = "DDouble!!";
-				fullJumbo = "false";
+				fullJumbo = "true";
 				break;
 			case "3":
 				mainDisplay = "TTTriple!!!";
-				fullJumbo = "false";
+				fullJumbo = "true";
 				break;
 		}
 	}

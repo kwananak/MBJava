@@ -50,6 +50,7 @@ public class Client {
 							case "turnStart": 
 								panel.turnStart();
 								panel.jumbotron.updateJumbotron(arrResp[2]);
+								panel.umpire.setTalk(" ");
 								break;
 							case "cycleBases":
 								panel.cycleBases(arrResp[2]);
@@ -75,6 +76,10 @@ public class Client {
 							case "team":
 								panel.keyboard.setColor(arrResp[2]);
 								break;
+							case "startLoop":
+								panel.jumbotron.updateJumbotron(arrResp[2]);
+								panel.umpire.setTalk(" ");
+								break;
 						}
 					} else {
 						System.out.println("server says: " + inputLog.get(inputLog.size()-1));
@@ -97,17 +102,11 @@ public class Client {
 		sendSock = s;
 		panel.keyboard.flipKey();
 		while (true) {
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			try {Thread.sleep(1);} catch (InterruptedException e) {e.printStackTrace();}
 			if (!panel.keyboard.storedAnswer.equals("")) {
-				System.out.println("sender loop break");
 				break;
 			}
 		}
-		System.out.println("out of loop");
 		try {
 			PrintWriter out = new PrintWriter(sendSock.getOutputStream(), true);
 			out.println(panel.keyboard.storedAnswer);
@@ -119,7 +118,6 @@ public class Client {
 				panel.keyboard.flipKey();
 				break;
 			}
-		System.out.println("out of second loop");
 		panel.keyboard.clearStoredAnswer();		
 	}
 }

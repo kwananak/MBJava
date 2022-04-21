@@ -3,11 +3,14 @@ package packClient;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import javax.swing.*;
 
 public class Panel extends JPanel implements Runnable{
 	Image background = new ImageIcon("back.png").getImage();
-	TeamClient[] teams = {new TeamClient(this, "redSprite.png", 10, 150), new TeamClient(this, "blueSprite.png", 630, 150)};
+	ArrayList<TeamClient> teams = new ArrayList<TeamClient>(Arrays.asList(new TeamClient(this, "redSprite.png", 9, 150), new TeamClient(this, "blueSprite.png", 630, 150)));
 	BasesClient bases = new BasesClient(teams);
 	Umpire umpire = new Umpire(this, "umpiSprite.png", 530, 180);
 	TeamClient teamField = null;
@@ -66,8 +69,8 @@ public class Panel extends JPanel implements Runnable{
 		g2D.drawImage(background, 0, 0, null);		
 
 		umpire.draw(g2D);
-		teams[0].drawTeam(g2D);
-		teams[1].drawTeam(g2D);
+		teams.get(0).drawTeam(g2D);
+		teams.get(1).drawTeam(g2D);
 		
 		jumbotron.draw(g2D);
 		keyboard.draw(g2D);
@@ -77,11 +80,11 @@ public class Panel extends JPanel implements Runnable{
 		batter = 0;
 		
 		if (str.equals("top")) {
-			teamField = teams[1];
-			teamBat = teams[0];
+			teamField = teams.get(1);
+			teamBat = teams.get(0);
 		} else {
-			teamField = teams[0];
-			teamBat = teams[1];
+			teamField = teams.get(0);
+			teamBat = teams.get(1);
 		}
 	
 		teamField.players.get(0).setDestination(bases.mountCoords);
@@ -108,6 +111,7 @@ public class Panel extends JPanel implements Runnable{
 					player.setBase(player.getBase()+1);
 					switch (player.getBase()) {
 						case 5:
+							player.setDestination(bases.homeCoordsBat);
 							player.setDestination(player.benchSpot);
 							player.setBase(0);
 							break;

@@ -23,20 +23,16 @@ public class Button extends JPanel implements MouseListener{
 	
 	
 	@Override
-	public void mouseClicked(MouseEvent e) {
-		keyboard.addInput(buttonID);	
+	public void mouseClicked(MouseEvent e) {			
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		keyboard.addInput(buttonID);		
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+	public void mouseReleased(MouseEvent e) {		
 	}
 
 	@Override
@@ -44,9 +40,7 @@ public class Button extends JPanel implements MouseListener{
 	}
 
 	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+	public void mouseExited(MouseEvent e) {		
 	}
 
 }

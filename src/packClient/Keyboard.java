@@ -31,7 +31,6 @@ public class Keyboard{
 				answer.remove(answer.size() - 1);
 			}
 		} else if (str.equals("E")) {
-			System.out.println("E pressed");
 			String answerString = "";
 			for (int i = 0; i < answer.size(); i++) {
 				answerString += answer.get(i);
