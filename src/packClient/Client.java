@@ -53,6 +53,7 @@ public class Client {
 								break;
 							case "cycleBases":
 								panel.cycleBases(arrResp[2]);
+								panel.jumbotron.setMainDisplay(arrResp[2]);
 								break;
 							case "clearBatter":
 								panel.clearBatter();
@@ -70,6 +71,9 @@ public class Client {
 							case "pitch":
 								panel.umpire.setTalk(arrResp[2]);
 								sender(server, arrResp[2]);
+								break;
+							case "team":
+								panel.keyboard.setColor(arrResp[2]);
 								break;
 						}
 					} else {
@@ -91,16 +95,32 @@ public class Client {
 	private static void sender(Socket s, String str) {
 		Socket sendSock = new Socket();
 		sendSock = s;
-		BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
-		System.out.println(str);
-		String command;
+		panel.keyboard.flipKey();
+		while (true) {
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			if (!panel.keyboard.storedAnswer.equals("")) {
+				System.out.println("sender loop break");
+				break;
+			}
+		}
+		System.out.println("out of loop");
 		try {
-			command = keyboard.readLine();
 			PrintWriter out = new PrintWriter(sendSock.getOutputStream(), true);
-			out.println(command);
+			out.println(panel.keyboard.storedAnswer);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}			
+		}
+		while (true)
+			if (panel.keyboard.keyOn) {
+				panel.keyboard.flipKey();
+				break;
+			}
+		System.out.println("out of second loop");
+		panel.keyboard.clearStoredAnswer();		
 	}
 }
 

@@ -6,7 +6,8 @@ public class Game extends Thread {
 	private String swing;
 	private int gameID;
 	private boolean top = true;
-	private int strikes, balls, scoreEvens, scoreOdds, inning, maxInnings, outs = 0;
+	private int strikes, balls, scoreEvens, scoreOdds, maxInnings, outs = 0;
+	private int inning = 1;
 	private ArrayList<ClientHandler> evens = new ArrayList<>();	
 	private ArrayList<ClientHandler> odds = new ArrayList<>();
 	private ArrayList<ClientHandler> players = new ArrayList<>();
@@ -26,7 +27,7 @@ public class Game extends Thread {
 		makeTeams();
 		bases = new Bases(evens, odds);
 		setMaxInnings();
-		while(inning < maxInnings) {
+		while(inning <= maxInnings) {
 			startInning();
 			while(outs < 2) {
 				startTurn();
@@ -60,10 +61,10 @@ public class Game extends Thread {
 		for(int j = 0; j < players.size(); j++) {
 			if (j%2 == 0) {
 				evens.add(players.get(j));
-				players.get(j).sender("You're in the Evens");
+				players.get(j).sender("command:team:true");
 			} else {
 				odds.add(players.get(j));
-				players.get(j).sender("You're in the Odds");
+				players.get(j).sender("command:team:false");
 			}
 		}
 	}
@@ -168,6 +169,11 @@ public class Game extends Thread {
 		} else {
 			topStr = "false";
 		}
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		massSend("command:turnStart:" + strikes + "," + balls + "," + outs  + "," + inning + "," + scoreEvens + " - " + scoreOdds + "," + topStr + ",false");
 		System.out.println("starting turn");
 		bases.setHitter(top);
@@ -256,9 +262,19 @@ public class Game extends Thread {
 			if (swing.equals("hit")) {
 				upScore(bases.cycleBases(pitch.get(2)));
 				massSend("command:cycleBases:" + pitch.get(2));
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			} else {
 				bases.clearBatter();
 				massSend("command:clearBatter");
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		System.out.println("outs " + outs + " ,score " + scoreEvens + " - " + scoreOdds);
@@ -273,7 +289,7 @@ public class Game extends Thread {
 	
 	private void endGame() {
 		System.out.println("final score " + scoreEvens + " - " + scoreOdds);
-		massSend("final score " + scoreEvens + " - " + scoreOdds);
+		massSend("command:umpire:final score " + scoreEvens + " - " + scoreOdds);
 		//save stats
 		//close game
 	}

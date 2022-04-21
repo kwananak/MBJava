@@ -14,6 +14,7 @@ public class Panel extends JPanel implements Runnable{
 	TeamClient teamBat = null;
 	int batter = 0;
 	Jumbotron jumbotron = new Jumbotron(this);
+	Keyboard keyboard = new Keyboard(this);
 	
 	final int PANEL_WIDTH = 1000;
 	final int PANEL_HEIGHT = 800;
@@ -69,6 +70,7 @@ public class Panel extends JPanel implements Runnable{
 		teams[1].drawTeam(g2D);
 		
 		jumbotron.draw(g2D);
+		keyboard.draw(g2D);
 	}
 	
 	public void inningStart(String str) {	
