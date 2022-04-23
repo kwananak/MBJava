@@ -3,16 +3,20 @@ package packClient;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class Panel extends JPanel implements Runnable{
-	Image background = new ImageIcon("back.png").getImage();
-	ArrayList<TeamClient> teams = new ArrayList<TeamClient>(Arrays.asList(new TeamClient(this, "redSprite.png", 9, 150), new TeamClient(this, "blueSprite.png", 630, 150)));
+	
+	BufferedImage background;
+	ArrayList<TeamClient> teams = new ArrayList<TeamClient>(Arrays.asList(new TeamClient(this, "Sprites/redSprite.png", 9, 150), new TeamClient(this, "Sprites/blueSprite.png", 630, 150)));
 	BasesClient bases = new BasesClient(teams);
-	Umpire umpire = new Umpire(this, "umpiSprite.png", 530, 180);
+	Umpire umpire = new Umpire(this, "Sprites/umpiSprite.png", 530, 180);
 	TeamClient teamField = null;
 	TeamClient teamBat = null;
 	int batter = 0;
@@ -37,6 +41,11 @@ public class Panel extends JPanel implements Runnable{
 
 	@Override
 	public void run() {
+		try {
+			background = ImageIO.read(ResourceLoader.load("Sprites/back.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		double drawInterval = 1000000000/FPS;
 		double delta = 0;
 		long lastTime = System.nanoTime();

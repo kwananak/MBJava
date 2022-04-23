@@ -11,6 +11,7 @@ public class ClientHandler extends Thread{
 	private int clientID;
 	private static ArrayList<String> inputs = new ArrayList<>();
 	private String storedIn = "";
+	Server server;
 	
 	public ClientHandler(Socket clientSocket, int IDFromServer) throws IOException {
 		this.client = clientSocket;
@@ -20,7 +21,7 @@ public class ClientHandler extends Thread{
 	}
 
 	public void run() {
-		System.out.println("ClientHandlerstarted");
+		System.out.println("ClientHandlerstarted" + clientID);
 		Receiver receiver = new Receiver();
 		receiver.start();			
 	}

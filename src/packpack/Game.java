@@ -1,5 +1,11 @@
 package packpack;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Game extends Thread {
@@ -14,16 +20,19 @@ public class Game extends Thread {
 	private ArrayList<ArrayList<Integer>> answers = new ArrayList<>();	
 	private Bases bases;
 	private ArrayList<Integer> pitch = new ArrayList<>();
-
+	private File log;
+	
+	
 	private boolean full = false;
 	
 	public Game(int IDFromServer) {
 		gameID = IDFromServer;
+		log = new File("logs/logGame" + Integer.toString(IDFromServer) + ".txt");
 	}
 	
 	public void run() {
 		waitForPlayers();
-		System.out.println("game " + gameID + " started with " + players.size() + " players");
+		printLog("game " + Integer.toString(gameID) + " started with " + Integer.toString(players.size()) + " players");
 		makeTeams();
 		bases = new Bases(evens, odds);
 		setMaxInnings();
@@ -39,7 +48,7 @@ public class Game extends Thread {
 	}
 	
 	public void waitForPlayers() {
-		System.out.println("waiting on players for 3 secs");
+		printLog("waiting on players for 3 secs");
 		int i = 0;
 		
 		while (true) {
@@ -47,11 +56,7 @@ public class Game extends Thread {
 			if (players.size() > 9 || (players.size() > 1 && i > 3000)) {
 				break;
 			} else {
-				try {
-					Thread.sleep(1);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				try {Thread.sleep(1);} catch (InterruptedException e) {e.printStackTrace();}
 			}
 		}		
 		full = !full;
@@ -95,8 +100,8 @@ public class Game extends Thread {
 			numInns += i.get(1);
 		}
 		maxInnings = numInns / answers.size();
-		System.out.println("game " + gameID + " maxInnings : " + maxInnings);
-		massSend("command:umpire: ");
+		printLog("maxInnings : " + Integer.toString(maxInnings));
+		massSend("command:umpire: " + Integer.toString(maxInnings) + " innings");
 	}
 	
 	public String getAnswerFromMount(ClientHandler pitcher) {		
@@ -112,7 +117,7 @@ public class Game extends Thread {
 	}
 	
 	public void getAnswersFromHandlers() {
-		System.out.println("getAnswers game " + gameID + " started");
+		printLog("getAnswers game started");
 		answers.clear();
 		while (answers.size() < players.size()) {
 			for (ClientHandler player : players) {
@@ -122,11 +127,11 @@ public class Game extends Thread {
 					answer.add(Integer.valueOf(player.getStoredIn()));
 					answers.add(answer);
 					player.clearStoredIn();
-					System.out.println("got " + answers.get(answers.size()-1).get(1) + " from player " + player.getClientID());
+					printLog("got " + answers.get(answers.size()-1).get(1) + " from player " + player.getClientID());
 				}
 			}
 		}
-		System.out.println("closing getAnswers game " + gameID);
+		printLog("closing getAnswers game " + gameID);
 	}
 	
 	public void addPlayer(ClientHandler newGuy) {
@@ -178,11 +183,11 @@ public class Game extends Thread {
 			pitch = getPitch(getAnswerFromMount(bases.getPitcher()));
 			try {Thread.sleep(500);} catch (InterruptedException e) {e.printStackTrace();}
 			massSend("command:umpire:" + pitch.get(0) + " * " + pitch.get(1));
-			System.out.println("sending pitch " + pitch.toString() + " to player " + bases.getHitter().getClientID() + " from player " + bases.getPitcher().getClientID());
+			printLog("sending pitch " + pitch.toString() + " to player " + bases.getHitter().getClientID() + " from player " + bases.getPitcher().getClientID());
 			sendPitch(pitch);
-			System.out.println("swing received : " + answers);
+			printLog("swing received : " + answers);
 			swing = swingResult(pitch);
-			System.out.println(swing);
+			printLog(swing);
 			if (swing == "hit") {
 				break;
 			} else {
@@ -238,7 +243,7 @@ public class Game extends Thread {
 	private void sendPitch(ArrayList<Integer> pitch) {
 		bases.getHome().get(0).sender("command:sender:" + pitch.get(0) + " * " + pitch.get(1));	
 		bases.getHome().get(1).sender("command:sender:" + pitch.get(0) + " * " + pitch.get(1));
-		System.out.println("getAnswers game " + gameID + " started");
+		printLog("getAnswers game " + gameID + " started");
 		
 		answers.clear();
 		while (answers.size() < bases.getHome().size()) {
@@ -249,7 +254,7 @@ public class Game extends Thread {
 					answer.add(Integer.valueOf(bases.getHome().get(i).getStoredIn()));
 					answers.add(answer);
 					bases.getHome().get(i).clearStoredIn();
-					System.out.println("got " + answers.get(answers.size()-1).get(1) + " from player " + bases.getHome().get(i).getClientID());
+					printLog("got " + answers.get(answers.size()-1).get(1) + " from player " + bases.getHome().get(i).getClientID());
 				}
 			}
 		}
@@ -268,7 +273,7 @@ public class Game extends Thread {
 				try {Thread.sleep(1500);} catch (InterruptedException e) {e.printStackTrace();}
 			}
 		}
-		System.out.println("outs " + outs + " ,score " + scoreEvens + " - " + scoreOdds);
+		printLog("outs " + outs + " ,score " + scoreEvens + " - " + scoreOdds);
 	}
 	
 	private void endInning() {
@@ -279,7 +284,7 @@ public class Game extends Thread {
 	}
 	
 	private void endGame() {
-		System.out.println("final score " + scoreEvens + " - " + scoreOdds);
+		printLog("final score " + scoreEvens + " - " + scoreOdds);
 		massSend("command:umpire:final score " + scoreEvens + " - " + scoreOdds);
 		//save stats
 		//close game
@@ -291,4 +296,18 @@ public class Game extends Thread {
 		}
 	}
 	
+	public void printLog(String str) {
+		FileWriter fw;
+		try {
+			fw = new FileWriter(log, true);
+			PrintWriter pw = new PrintWriter(fw);
+			DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		    LocalDateTime logTime = LocalDateTime.now();
+		    String formattedTime = logTime.format(timeFormatter);	    
+		    pw.println(formattedTime + " " + str);
+			pw.close();	
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

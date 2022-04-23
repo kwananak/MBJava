@@ -1,0 +1,49 @@
+2022-04-23 12:25:22 waiting on players for 3 secs
+2022-04-23 12:25:29 game 0 started with 2 players
+2022-04-23 12:29:57 waiting on players for 3 secs
+2022-04-23 12:30:04 game 0 started with 2 players
+2022-04-23 12:30:04 getAnswers game 0 started
+2022-04-23 12:30:06 got 2 from player 1
+2022-04-23 12:30:07 got 4 from player 0
+2022-04-23 12:30:07 closing getAnswers game 0
+2022-04-23 12:30:07 game 0 maxInnings : 3
+2022-04-23 12:45:05 waiting on players for 3 secs
+2022-04-23 12:45:12 game 0 started with 2 players
+2022-04-23 12:45:12 getAnswers game started
+2022-04-23 12:46:50 waiting on players for 3 secs
+2022-04-23 12:46:57 game 0 started with 2 players
+2022-04-23 12:46:57 getAnswers game started
+2022-04-23 12:46:58 got 1 from player 1
+2022-04-23 12:47:00 got 2 from player 0
+2022-04-23 12:47:00 closing getAnswers game 0
+2022-04-23 12:47:00 maxInnings : 1
+2022-04-23 12:47:04 sending pitch [8, 9, 2] to player 0 from player 1
+2022-04-23 12:47:04 getAnswers game 0 started
+2022-04-23 12:47:06 got 8 from player 0
+2022-04-23 12:47:07 got 8 from player 1
+2022-04-23 12:47:07 swing received : [[1, 8], [0, 8]]
+2022-04-23 12:47:07 strike
+2022-04-23 12:59:28 waiting on players for 3 secs
+2022-04-23 12:59:35 game 0 started with 2 players
+2022-04-23 12:59:35 getAnswers game started
+2022-04-23 13:36:01 waiting on players for 3 secs
+2022-04-23 13:48:06 waiting on players for 3 secs
+2022-04-23 14:28:10 waiting on players for 3 secs
+2022-04-23 14:28:29 game 0 started with 2 players
+2022-04-23 14:28:29 getAnswers game started
+2022-04-23 14:29:53 waiting on players for 3 secs
+2022-04-23 14:30:00 game 0 started with 2 players
+2022-04-23 14:30:00 getAnswers game started
+2022-04-23 14:30:04 got 2 from player 0
+2022-04-23 14:30:05 got 1 from player 1
+2022-04-23 14:30:05 closing getAnswers game 0
+2022-04-23 14:30:05 maxInnings : 1
+2022-04-23 14:32:49 waiting on players for 3 secs
+2022-04-23 14:32:56 game 0 started with 2 players
+2022-04-23 14:32:56 getAnswers game started
+2022-04-23 14:51:20 waiting on players for 3 secs
+2022-04-23 14:53:42 game 0 started with 2 players
+2022-04-23 14:53:42 getAnswers game started
+2022-04-23 15:20:30 waiting on players for 3 secs
+2022-04-23 15:20:48 game 0 started with 2 players
+2022-04-23 15:20:48 getAnswers game started

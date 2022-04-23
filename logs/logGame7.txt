@@ -1,0 +1,17 @@
+2022-04-23 15:15:31 waiting on players for 3 secs
+2022-04-23 15:15:54 game 7 started with 2 players
+2022-04-23 15:15:54 getAnswers game started
+2022-04-23 15:52:43 waiting on players for 3 secs
+2022-04-23 15:52:50 game 7 started with 2 players
+2022-04-23 15:52:50 getAnswers game started
+2022-04-23 15:52:53 got 1 from player 15
+2022-04-23 15:52:54 got 2 from player 14
+2022-04-23 15:52:54 closing getAnswers game 7
+2022-04-23 15:52:54 maxInnings : 1
+2022-04-23 15:53:00 sending pitch [8, 11, 2] to player 14 from player 15
+2022-04-23 15:53:00 getAnswers game 7 started
+2022-04-23 15:53:04 got 88 from player 14
+2022-04-23 15:53:05 got 8 from player 15
+2022-04-23 15:53:05 swing received : [[1, 88], [0, 8]]
+2022-04-23 15:53:05 hit
+2022-04-23 15:53:07 outs 0 ,score 0 - 0

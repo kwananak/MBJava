@@ -1,0 +1,13 @@
+2022-04-23 14:40:48 waiting on players for 3 secs
+2022-04-23 14:40:55 game 3 started with 2 players
+2022-04-23 14:40:55 getAnswers game started
+2022-04-23 14:40:57 got 1 from player 7
+2022-04-23 14:40:59 got 2 from player 6
+2022-04-23 14:40:59 closing getAnswers game 3
+2022-04-23 14:40:59 maxInnings : 1
+2022-04-23 15:01:13 waiting on players for 3 secs
+2022-04-23 15:09:18 game 3 started with 2 players
+2022-04-23 15:09:18 getAnswers game started
+2022-04-23 15:45:25 waiting on players for 3 secs
+2022-04-23 15:45:56 game 3 started with 2 players
+2022-04-23 15:45:56 getAnswers game started

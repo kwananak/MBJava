@@ -6,14 +6,17 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 public class Keyboard{
 	boolean keyOn = false;
-	Image board;
+	BufferedImage board;
 	Panel panel;
 	int[] coords = {0,230};
 	ArrayList<String> answer = new ArrayList<>();
@@ -49,10 +52,18 @@ public class Keyboard{
 		
 	public void setColor(String str) {	
 		if(str.equals("true")) {
-			 board =  new ImageIcon("redKey.png").getImage();
+			 try {
+					this.board = ImageIO.read(ResourceLoader.load("Sprites/redKey.png"));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			 coords[0] = 170;
 		} else {
-			 board =  new ImageIcon("blueKey.png").getImage();
+			 try {
+					this.board = ImageIO.read(ResourceLoader.load("Sprites/blueKey.png"));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			 coords[0] = 450;
 		} 
 		button1 = new Button(panel,this,"1");

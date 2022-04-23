@@ -2,8 +2,11 @@ package packClient;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 public class PlayerClient {
@@ -11,15 +14,19 @@ public class PlayerClient {
 	ArrayList<Integer> coords = new ArrayList<>();;
 	ArrayList<Integer> benchSpot = new ArrayList<>();;
 	Panel panel;	
-	Image sprite;
 	ArrayList<ArrayList<Integer>> destinations = new ArrayList<>();
 	boolean field, home, onBase, bench, running = false;
 	int base = 0;
+	BufferedImage sprite;
 	
 	
 	public PlayerClient(Panel panel, String str, int x, int y) {
 		this.panel = panel;
-		this.sprite =  new ImageIcon(str).getImage();
+		try {
+			this.sprite = ImageIO.read(ResourceLoader.load(str));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		this.coords.add(x);
 		this.coords.add(y);
 		this.benchSpot.add(x);

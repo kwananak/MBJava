@@ -10,7 +10,7 @@ public class Client {
 	static Panel panel = new Panel();
 	
 	public static void main(String[] args) throws IOException {
-		Socket server = new Socket("localhost", 7777);
+		Socket server = new Socket("192.168.0.196", 5565);
 		System.out.println("connected to server");
 		Receiver receiver = new Receiver(server);
 		
