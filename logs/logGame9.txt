@@ -1,3 +1,0 @@
-2022-04-23 15:17:17 waiting on players for 3 secs
-2022-04-23 15:17:31 game 9 started with 2 players
-2022-04-23 15:17:31 getAnswers game started

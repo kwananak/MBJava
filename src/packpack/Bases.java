@@ -3,18 +3,18 @@ package packpack;
 import java.util.*;
 
 public class Bases {
-	private ArrayList<ClientHandler> home = new ArrayList<>();
-	private ArrayList<ClientHandler> first = new ArrayList<>();
-	private ArrayList<ClientHandler> second = new ArrayList<>();
-	private ArrayList<ClientHandler> third = new ArrayList<>();
-	private ArrayList<ClientHandler> mount = new ArrayList<>();
+	private ArrayList<ClientHandler> home = new ArrayList<ClientHandler>();
+	private ArrayList<ClientHandler> first = new ArrayList<ClientHandler>();
+	private ArrayList<ClientHandler> second = new ArrayList<ClientHandler>();
+	private ArrayList<ClientHandler> third = new ArrayList<ClientHandler>();
+	private ArrayList<ClientHandler> mount = new ArrayList<ClientHandler>();
 	
 	private ArrayList<ClientHandler> batOrderEvens;	
 	private ArrayList<ClientHandler> batOrderOdds;
 
 	public Bases (ArrayList<ClientHandler> a, ArrayList<ClientHandler> b) {
-		batOrderEvens = new ArrayList<>(a);
-		batOrderOdds = new ArrayList<>(b);
+		batOrderEvens = new ArrayList<ClientHandler>(a);
+		batOrderOdds = new ArrayList<ClientHandler>(b);
 	}
 	
 	public void setFieldHome(ArrayList<ClientHandler> p) {
@@ -64,14 +64,14 @@ public class Bases {
 	public void setHitter(boolean top) {
 		if (top) {
 			home.add(batOrderEvens.get(0));
-			ArrayList<ClientHandler> newOrder = new ArrayList<>();
+			ArrayList<ClientHandler> newOrder = new ArrayList<ClientHandler>();
 			newOrder.addAll(batOrderEvens);			
 			newOrder.add(newOrder.get(0));
 			newOrder.remove(0);
 			batOrderEvens = newOrder;
 		} else {
 			home.add(batOrderOdds.get(0));
-			ArrayList<ClientHandler> newOrder = new ArrayList<>();
+			ArrayList<ClientHandler> newOrder = new ArrayList<ClientHandler>();
 			newOrder.addAll(batOrderOdds);
 			newOrder.add(newOrder.get(0));
 			newOrder.remove(0);

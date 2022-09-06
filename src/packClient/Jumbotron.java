@@ -57,16 +57,17 @@ public class Jumbotron extends JPanel{
 	}
 	
 	public void setMainDisplay(String str){
-		switch (str) {
-			case "1":
+		int i = Integer.valueOf(str);
+		switch (i) {
+			case 1:
 				mainDisplay = "Single!";
 				fullJumbo = "true";
 				break;
-			case "2":
+			case 2:
 				mainDisplay = "DDouble!!";
 				fullJumbo = "true";
 				break;
-			case "3":
+			case 3:
 				mainDisplay = "TTTriple!!!";
 				fullJumbo = "true";
 				break;

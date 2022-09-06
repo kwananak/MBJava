@@ -1,7 +1,0 @@
-2022-04-23 14:41:26 waiting on players for 3 secs
-2022-04-23 15:09:53 waiting on players for 3 secs
-2022-04-23 15:12:17 game 4 started with 2 players
-2022-04-23 15:12:17 getAnswers game started
-2022-04-23 15:46:20 waiting on players for 3 secs
-2022-04-23 15:46:37 game 4 started with 2 players
-2022-04-23 15:46:37 getAnswers game started

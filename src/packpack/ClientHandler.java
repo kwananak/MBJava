@@ -9,7 +9,7 @@ public class ClientHandler extends Thread{
 	private BufferedReader in;
 	private PrintWriter out;
 	private int clientID;
-	private static ArrayList<String> inputs = new ArrayList<>();
+	private static ArrayList<String> inputs = new ArrayList<String>();
 	private String storedIn = "";
 	Server server;
 	

@@ -14,12 +14,12 @@ public class Game extends Thread {
 	private boolean top = true;
 	private int strikes, balls, scoreEvens, scoreOdds, maxInnings, outs = 0;
 	private int inning = 1;
-	private ArrayList<ClientHandler> evens = new ArrayList<>();	
-	private ArrayList<ClientHandler> odds = new ArrayList<>();
-	private ArrayList<ClientHandler> players = new ArrayList<>();
-	private ArrayList<ArrayList<Integer>> answers = new ArrayList<>();	
+	private ArrayList<ClientHandler> evens = new ArrayList<ClientHandler>();	
+	private ArrayList<ClientHandler> odds = new ArrayList<ClientHandler>();
+	private ArrayList<ClientHandler> players = new ArrayList<ClientHandler>();
+	private ArrayList<ArrayList<Integer>> answers = new ArrayList<ArrayList<Integer>>();	
 	private Bases bases;
-	private ArrayList<Integer> pitch = new ArrayList<>();
+	private ArrayList<Integer> pitch = new ArrayList<Integer>();
 	private File log;
 	
 	
@@ -101,7 +101,8 @@ public class Game extends Thread {
 		}
 		maxInnings = numInns / answers.size();
 		printLog("maxInnings : " + Integer.toString(maxInnings));
-		massSend("command:umpire: " + Integer.toString(maxInnings) + " innings");
+		massSend("command:umpire: " + Integer.toString(maxInnings) + " innings");				
+		try {Thread.sleep(1);} catch (InterruptedException e) {e.printStackTrace();}
 	}
 	
 	public String getAnswerFromMount(ClientHandler pitcher) {		
@@ -122,7 +123,7 @@ public class Game extends Thread {
 		while (answers.size() < players.size()) {
 			for (ClientHandler player : players) {
 				if(!player.getStoredIn().isBlank()) {
-					ArrayList<Integer> answer = new ArrayList<>();
+					ArrayList<Integer> answer = new ArrayList<Integer>();
 					answer.add(Integer.valueOf(player.getClientID()));
 					answer.add(Integer.valueOf(player.getStoredIn()));
 					answers.add(answer);
@@ -225,7 +226,7 @@ public class Game extends Thread {
 	
 	private ArrayList<Integer> getPitch(String str) {
 		Random rand = new Random();
-		ArrayList<Integer> intPitch = new ArrayList<>();
+		ArrayList<Integer> intPitch = new ArrayList<Integer>();
 		
 		if (str.equals("0")) {
 			intPitch.add(rand.nextInt(5) + 3);
@@ -249,7 +250,7 @@ public class Game extends Thread {
 		while (answers.size() < bases.getHome().size()) {
 			for (int i = 0 ; i < 2 ; i++) {
 				if(!bases.getHome().get(i).getStoredIn().isBlank()) {
-					ArrayList<Integer> answer = new ArrayList<>();
+					ArrayList<Integer> answer = new ArrayList<Integer>();
 					answer.add(i);
 					answer.add(Integer.valueOf(bases.getHome().get(i).getStoredIn()));
 					answers.add(answer);

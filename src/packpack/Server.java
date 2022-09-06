@@ -1,14 +1,14 @@
 package packpack;
 
 import java.net.*;
-import java.time.LocalDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.io.*;
 import java.util.*;
 
 public class Server {
-	private static ArrayList<ClientHandler> clients = new ArrayList<>();
-	private static ArrayList<Game> games = new ArrayList<>();
+	private static ArrayList<ClientHandler> clients = new ArrayList<ClientHandler>();
+	private static ArrayList<Game> games = new ArrayList<Game>();
 	static File log = new File("logs/log.txt");
 	
 	public static void main(String[] args) throws IOException {
